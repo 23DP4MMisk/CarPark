@@ -131,6 +131,14 @@ Lai nesabojātu galveno kodu, katrs strādā **savā zarā**, un šis zars jums 
 **Rezultāts:** Pēc šiem soļiem jums būs savs pastāvīgais zars `marija` gan GitHub, gan lokāli. Turpmāk varēsiet tajā strādāt bez papildu zara izveides.
 
 ---
+#### Trīs komandas pirms darba sākšanas
+
+Katru reizi, pirms sākat strādāt, izpildiet šīs trīs komandas:
+
+```bash
+git checkout marija   # Pārliecināties, ka esat savā zarā
+git pull origin main  # Pievilkt jaunākās izmaiņas no citiem
+git status            # Apskatīt, kas jums ir mainījies
 
 ### 3. Ikdienas darba process (katru reizi, kad sākat strādāt)
 
