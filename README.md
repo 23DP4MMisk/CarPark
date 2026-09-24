@@ -1,8 +1,12 @@
 # CarPark
 
-**Automašīnu nomas platforma ar integrētu autostāvvietu rezervēšanu**
 
----
+- [INSTALL.md](INSTALL.md) — instalācija un palaišana
+- [CONTRIBUTING.md](CONTRIBUTING.md) — sadarbības noteikumi
+- [ARCHITECTURE.md](ARCHITECTURE.md) — arhitektūra un datu bāze
+
+
+**Automašīnu nomas platforma ar integrētu autostāvvietu rezervēšanu**
 
 ## Projekta būtība
 
@@ -10,7 +14,8 @@ Vietne/lietotne, kas apvieno **divus pakalpojumus vienuviet**:
 - automašīnu nomu
 - autostāvvietu rezervēšanu iepriekš, pirms lietotājs ierodas  galamērķī
 
----
+
+
 
 ## 1. Automašīnu noma
 
@@ -25,7 +30,7 @@ Vietne/lietotne, kas apvieno **divus pakalpojumus vienuviet**:
 - Vietas rezervēšana iepriekš — vismaz **12 stundas pirms ierašanās**
 - Aktuāli gan pilsētas centrā, gan citos rajonos
 
----
+
 
 ## Galvenā problēma, ko risina CarPark
 
@@ -38,7 +43,7 @@ Vietne/lietotne, kas apvieno **divus pakalpojumus vienuviet**:
 
 Tas novērš nepieciešamību pārslēgties starp vairākām aplikācijām un nodrošina vienotu pieredzi.
 
----
+
 
 ## Kā tas darbojas kopā
 
@@ -48,7 +53,7 @@ Tas novērš nepieciešamību pārslēgties starp vairākām aplikācijām un no
 4. Lietotājs iepriekš rezervē autostāvvietu
 5. Ierodoties — vieta jau garantēti ir brīva
 
----
+
 
 ## Vērtība lietotājam
 
@@ -57,7 +62,7 @@ Tas novērš nepieciešamību pārslēgties starp vairākām aplikācijām un no
 - **Ērtība "vienā logā"** — nav nepieciešams izmantot divus atsevišķus pakalpojumus
 - **Vienota maksājumu sistēma** — gan noma, gan stāvvieta apmaksāta vienā vietā
 
-l
+
 
 
 
@@ -104,7 +109,7 @@ Lai novērtētu CarPark koncepta dzīvotspēju, tika izpētīti gan Latvijas tir
 
 Šī instrukcija ir paredzēta visiem komandas dalībniekiem, kuri strādā pie projekta **CarPark** lokāli, izmantojot **Visual Studio Code** (nevis GitHub Codespaces).
 
----
+
 
 ### 1. Sākotnējā uzstādīšana (katrs dara vienu reizi)
 
@@ -114,7 +119,7 @@ Pirms sākat darbu, pārliecinieties, ka esat pieņēmis uzaicinājumu kā **Col
 
 2. **Pārbaudiet Git konfigurāciju**, lai jūsu komentāri būtu saistīti ar jūsu GitHub profilu. Izpildiet `git config --global user.name "Jūsu Vārds"` un `git config --global user.email "jusu@epasts.lv"`. E-pastam ir jāsakrīt ar to, kas norādīts jūsu GitHub profilā.
 
----
+
 
 ### 2. Sava personīgā zara izveide (katrs dara vienu reizi)
 
@@ -130,7 +135,7 @@ Lai nesabojātu galveno kodu, katrs strādā **savā zarā**, un šis zars jums 
 
 **Rezultāts:** Pēc šiem soļiem jums būs savs pastāvīgais zars `marija` gan GitHub, gan lokāli. Turpmāk varēsiet tajā strādāt bez papildu zara izveides.
 
----
+
 #### Trīs komandas pirms darba sākšanas
 
 Katru reizi, pirms sākat strādāt, izpildiet šīs trīs komandas:
