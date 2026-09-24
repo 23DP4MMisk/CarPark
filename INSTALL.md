@@ -91,7 +91,7 @@ Atvērt http://127.0.0.1:8000.
 Ja nepieciešams pacelt projektu no jauna:
 
 ## Laravel
-composer create-project laravel/laravel CarPark
+composer create-project laravel/laravel CarPark  
 cd CarPark
 
 ## Breeze + Livewire
@@ -101,10 +101,10 @@ php artisan breeze:install livewire
 ###   tumšā tēma: no
 ###   TypeScript: no
 
-## SQLite
-cp .env.example .env
- .env failā: DB_CONNECTION=sqlite
-touch database/database.sqlite
+### SQLite
+cp .env.example .env  
+ .env failā: DB_CONNECTION=sqlite  
+touch database/database.sqlite  
 
 ## JS
 npm install
