@@ -8,7 +8,7 @@
 
 Vietne/lietotne, kas apvieno **divus pakalpojumus vienuviet**:
 - automašīnu nomu
-- autostāvvietu rezervēšanu iepriekš, pirms lietotājs ierodas galamērķī
+- autostāvvietu rezervēšanu iepriekš, pirms lietotājs ierodas  galamērķī
 
 ---
 
