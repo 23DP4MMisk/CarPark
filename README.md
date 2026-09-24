@@ -52,12 +52,12 @@ Tas novērš nepieciešamību pārslēgties starp vairākām aplikācijām un no
 
 ## Vērtība lietotājam
 
-- **Laika ietaupījums** — nav nepieciešams meklēt autostāvvietu uz vietas
+- **Laika ietaupījums** - nav nepieciešams meklēt autostāvvietu uz vietas
 - **Paredzamība** — vieta ir rezervēta jau iepriekš
 - **Ērtība "vienā logā"** — nav nepieciešams izmantot divus atsevišķus pakalpojumus
 - **Vienota maksājumu sistēma** — gan noma, gan stāvvieta apmaksāta vienā vietā
 
-
+l
 
 
 
