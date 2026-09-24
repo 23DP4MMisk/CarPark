@@ -5,6 +5,24 @@
 - [CONTRIBUTING.md](CONTRIBUTING.md) — sadarbības noteikumi
 - [ARCHITECTURE.md](ARCHITECTURE.md) — arhitektūra un datu bāze
 
+## Tehnoloģijas
+
+- Laravel 11
+- Livewire 3
+- Laravel Breeze (Livewire komplekts)
+- SQLite
+- Tailwind CSS
+- Leaflet (CDN)
+
+## Komanda
+
+| Dalībnieks | Loma |
+|---|---|
+| Tu | Backend, komandas vadītājs |
+| Ksjuša | Dizains + Frontend |
+| Renars | Frontend + Testēšana |
+
+## Īss apraksts
 
 **Automašīnu nomas platforma ar integrētu autostāvvietu rezervēšanu**
 
@@ -13,9 +31,6 @@
 Vietne/lietotne, kas apvieno **divus pakalpojumus vienuviet**:
 - automašīnu nomu
 - autostāvvietu rezervēšanu iepriekš, pirms lietotājs ierodas  galamērķī
-
-
-
 
 ## 1. Automašīnu noma
 
