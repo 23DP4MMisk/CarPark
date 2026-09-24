@@ -63,23 +63,23 @@ composer install
 npm install
 
 ### 3.4. Vides sagatavošana
-cp .env.example .env
+cp .env.example .env  
 php artisan key:generate
 
 Pārbaudīt, ka .env failā ir:
 DB_CONNECTION=sqlite
 
 ### 3.5. Datu bāze
-touch database/database.sqlite
+touch database/database.sqlite  
 php artisan migrate --seed
 
 ### 3.6. Simboliskā saite attēliem
 php artisan storage:link
 
 ### 3.7. Palaišana
-Terminālis 1:
-php artisan serve
-Terminālis 2:
+Terminālis 1:  
+php artisan serve  
+Terminālis 2:  
 npm run dev
 
 Atvērt http://127.0.0.1:8000.
@@ -90,29 +90,29 @@ Atvērt http://127.0.0.1:8000.
 
 Ja nepieciešams pacelt projektu no jauna:
 
-# Laravel
+## Laravel
 composer create-project laravel/laravel CarPark
 cd CarPark
 
-# Breeze + Livewire
-composer require laravel/breeze --dev
+## Breeze + Livewire
+composer require laravel/breeze --dev  
 php artisan breeze:install livewire
-#   testi: PHPUnit
-#   tumšā tēma: no
-#   TypeScript: no
+###   testi: PHPUnit
+###   tumšā tēma: no
+###   TypeScript: no
 
-# SQLite
+## SQLite
 cp .env.example .env
-# .env failā: DB_CONNECTION=sqlite
+ .env failā: DB_CONNECTION=sqlite
 touch database/database.sqlite
 
-# JS
+## JS
 npm install
 
-# Migrācijas
+## Migrācijas
 php artisan migrate
 
----
+
 
 ## 5. Noderīgas komandas
 
@@ -126,42 +126,42 @@ php artisan migrate
 | npm run dev | Vite watch |
 | npm run build | produkcijas būvējums |
 
----
+
 
 ## 6. Biežākās problēmas
 
 ### could not find driver
-SQLite paplašinājums ir izslēgts. Atvērt php.ini un atkomentēt:
-extension=pdo_sqlite
-extension=sqlite3
+SQLite paplašinājums ir izslēgts. Atvērt php.ini un atkomentēt:  
+extension=pdo_sqlite  
+extension=sqlite3  
 
 ### database does not exist
-Nav izveidots DB fails:
-touch database/database.sqlite
+Nav izveidots DB fails:  
+touch database/database.sqlite  
 php artisan migrate
 
 ### Stili netiek piemēroti
-Nav palaists Vite:
-npm run dev
+Nav palaists Vite:  
+npm run dev  
 
 ### Vite manifest not found
-Jāsabūvē aktīvi:
+Jāsabūvē aktīvi:  
 npm run build
 
 ### Ports aizņemts Codespaces
-Pārbaudīt cilni Ports — kurš ports jau aizņemts, un norādīt citu:
+Pārbaudīt cilni Ports — kurš ports jau aizņemts, un norādīt citu:  
 php artisan serve --host=0.0.0.0 --port=8001
 
----
+
 
 ## 7. Testa dati
 
-Pēc php artisan migrate --seed DB būs:
+Pēc php artisan migrate --seed DB būs:  
 
 - 1 administrators: admin@carpark.test / password
 - 1 lietotājs: user@carpark.test / password
 - 12 automašīnas (economy / comfort / suv)
 - 10 autostāvvietas Rīgā
 
-Pilna atiestatīšana:
+Pilna atiestatīšana:  
 php artisan migrate:fresh --seed
