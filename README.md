@@ -18,8 +18,8 @@
 
 | Dalībnieks | Loma |
 |---|---|
-| Tu | Backend, komandas vadītājs |
-| Ksjuša | Dizains + Frontend |
+| Marija | Backend |
+| Ksenija | Dizains + Frontend, komandas vadītājs |
 | Renars | Frontend + Testēšana |
 
 ## Īss apraksts
