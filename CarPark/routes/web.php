@@ -12,6 +12,10 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+Route::get('admin/bookings', App\Livewire\Admin\BookingList::class)
+    ->middleware(['auth', 'admin'])
+    ->name('admin.bookings');
+
 Route::post('logout', function (App\Livewire\Actions\Logout $logout) {
     $logout();
 
