@@ -28,6 +28,10 @@ Route::get('admin/bookings', App\Livewire\Admin\BookingList::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.bookings');
 
+Route::get('admin/cars', App\Livewire\Admin\CarManager::class)
+    ->middleware(['auth', 'admin'])
+    ->name('admin.cars');
+
 Route::get('admin/parking', App\Livewire\Admin\ParkingManager::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.parking');
