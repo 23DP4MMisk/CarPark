@@ -12,6 +12,10 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+Route::get('cars/{car}/book', App\Livewire\Cars\CarBookingForm::class)
+    ->middleware('auth')
+    ->name('cars.book');
+
 Route::get('parking/{spot}/book', App\Livewire\Parking\ParkingBookingForm::class)
     ->middleware('auth')
     ->name('parking.book');
