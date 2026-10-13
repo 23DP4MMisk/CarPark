@@ -32,9 +32,34 @@ class AuthenticationTest extends TestCase
 
         $component
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect('/');
 
         $this->assertAuthenticated();
+    }
+
+    public function test_admin_is_redirected_to_admin_cars_after_login(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        Volt::test('pages.auth.login')
+            ->set('form.email', $admin->email)
+            ->set('form.password', 'password')
+            ->call('login')
+            ->assertHasNoErrors()
+            ->assertRedirect('/admin/cars');
+    }
+
+    public function test_intended_url_takes_priority_after_login(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        session(['url.intended' => url('/my-bookings')]);
+
+        Volt::test('pages.auth.login')
+            ->set('form.email', $admin->email)
+            ->set('form.password', 'password')
+            ->call('login')
+            ->assertRedirect('/my-bookings');
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
