@@ -52,4 +52,16 @@ trait HandlesReservation
             ->where('end_time', '>', $start)
             ->count() >= $capacity;
     }
+
+    /** Dienu skaits, noapaļots uz augšu pēc minūtēm. */
+    public static function calculateDays(Carbon $start, Carbon $end): int
+    {
+        return (int) ceil(ceil($start->diffInMinutes($end, true)) / (24 * 60));
+    }
+
+    /** Stundu skaits, noapaļots uz augšu pēc minūtēm. */
+    public static function calculateHours(Carbon $start, Carbon $end): int
+    {
+        return (int) ceil(ceil($start->diffInMinutes($end, true)) / 60);
+    }
 }
