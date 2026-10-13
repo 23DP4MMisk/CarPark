@@ -16,6 +16,10 @@ Route::get('admin/bookings', App\Livewire\Admin\BookingList::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.bookings');
 
+Route::get('admin/parking', App\Livewire\Admin\ParkingManager::class)
+    ->middleware(['auth', 'admin'])
+    ->name('admin.parking');
+
 Route::post('logout', function (App\Livewire\Actions\Logout $logout) {
     $logout();
 
