@@ -12,6 +12,10 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+Route::get('my-bookings', App\Livewire\MyBookings::class)
+    ->middleware(['auth'])
+    ->name('my-bookings');
+
 Route::get('admin/bookings', App\Livewire\Admin\BookingList::class)
     ->middleware(['auth', 'admin'])
     ->name('admin.bookings');
