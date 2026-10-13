@@ -72,7 +72,7 @@ class ParkingBookingForm extends Component
 
     private function calculatePrice(Carbon $start, Carbon $end): float
     {
-        $hours = (int) ceil(ceil($start->diffInMinutes($end, true)) / 60);
+        $hours = ParkingReservation::calculateHours($start, $end);
 
         return round($hours * (float) $this->spot->price_per_hour, 2);
     }
