@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Car extends Model
 {
+    public const CLASSES = ['economy' => 'Ekonomiskā', 'comfort' => 'Komforta', 'suv' => 'SUV', 'premium' => 'Premium'];
+
+    public const FUEL_TYPES = ['petrol' => 'Benzīns', 'diesel' => 'Dīzelis', 'electric' => 'Elektro'];
+
+    public const TRANSMISSIONS = ['manual' => 'Manuālā', 'automatic' => 'Automātiskā'];
+
+    public const DRIVETRAINS = ['fwd' => 'Priekšpiedziņa', 'rwd' => 'Pakaļpiedziņa', 'awd' => '4x4'];
+
     protected $guarded = [];
 
     protected function casts(): array
@@ -21,6 +29,11 @@ class Car extends Model
     public function reservations(): HasMany
     {
         return $this->hasMany(CarReservation::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(CarImage::class)->orderBy('sort_order')->orderBy('id');
     }
 
     public function getFullNameAttribute(): string
