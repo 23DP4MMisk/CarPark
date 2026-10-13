@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait HandlesReservation
@@ -39,5 +40,16 @@ trait HandlesReservation
         }
 
         return $this->forceFill(['status' => self::STATUS_CANCELLED])->save();
+    }
+
+    /** Vai intervāls pārklājas ar vismaz $capacity esošām rezervācijām šim objektam. */
+    public static function hasConflict(string $foreignKey, int $foreignId, Carbon $start, Carbon $end, int $capacity = 1): bool
+    {
+        return static::query()
+            ->where($foreignKey, $foreignId)
+            ->whereIn('status', [self::STATUS_RESERVED, self::STATUS_ACTIVE])
+            ->where('start_time', '<', $end)
+            ->where('end_time', '>', $start)
+            ->count() >= $capacity;
     }
 }
