@@ -12,6 +12,8 @@ class ParkingSpot extends Model
     protected function casts(): array
     {
         return [
+            'lat' => 'decimal:7',
+            'lng' => 'decimal:7',
             'price_per_hour' => 'decimal:2',
             'rating' => 'decimal:1',
             'open_24_7' => 'boolean',
