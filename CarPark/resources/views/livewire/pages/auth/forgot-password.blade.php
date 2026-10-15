@@ -17,9 +17,6 @@ new #[Layout('layouts.guest')] class extends Component
             'email' => ['required', 'string', 'email'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
         $status = Password::sendResetLink(
             $this->only('email')
         );
@@ -37,25 +34,19 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+    <h1 class="text-2xl font-bold text-gray-900">Aizmirsi paroli?</h1>
+    <p class="mt-1 text-sm text-gray-500">Nekas. Ievadiet e-pasta adresi, un mēs nosūtīsim saiti jaunas paroles izveidei.</p>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-auth-session-status class="mt-4" :status="session('status')" />
 
-    <form wire:submit="sendPasswordResetLink">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+    <form wire:submit="sendPasswordResetLink" class="mt-8 space-y-5">
+        <x-auth.input id="email" type="email" name="email" label="E-pasts" wire:model="email"
+                      placeholder="vards@epasts.lv" required autofocus :messages="$errors->get('email')" />
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
+        <x-auth.button class="w-full">Nosūtīt atiestatīšanas saiti</x-auth.button>
     </form>
+
+    <p class="mt-6 text-center text-sm text-gray-600">
+        <a href="{{ route('login') }}" wire:navigate class="font-semibold text-brand-700 hover:text-brand-900">Atpakaļ uz pieteikšanos</a>
+    </p>
 </div>
