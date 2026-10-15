@@ -36,23 +36,22 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
+    <h1 class="text-2xl font-bold text-gray-900">Apstipriniet e-pastu</h1>
+    <p class="mt-1 text-sm text-gray-500">Paldies par reģistrēšanos! Pirms sākat, lūdzu, apstipriniet e-pasta adresi, noklikšķinot uz saites, ko mēs jums nosūtījām. Ja e-pasts nav saņemts, sūtīsim vēlreiz.</p>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        <div class="mt-4 rounded-lg bg-brand-50 px-4 py-3 text-sm font-medium text-brand-900">
+            Jauna apstiprinājuma saite ir nosūtīta uz e-pasta adresi, ko norādījāt reģistrācijas laikā.
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
-        <x-primary-button wire:click="sendVerification">
-            {{ __('Resend Verification Email') }}
-        </x-primary-button>
-
-        <button wire:click="logout" type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            {{ __('Log Out') }}
+    <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <button type="button" wire:click="logout" class="text-center text-sm font-medium text-gray-600 underline hover:text-gray-900">
+            Iziet
         </button>
+
+        <x-auth.button type="button" wire:click="sendVerification" class="w-full sm:w-auto">
+            Nosūtīt vēlreiz
+        </x-auth.button>
     </div>
 </div>
