@@ -89,4 +89,46 @@ class CarManagerTest extends TestCase
 
         $this->assertDatabaseCount('cars', 0);
     }
+
+    public function test_create_modal_opens_and_closes(): void
+    {
+        $this->actingAs(User::factory()->create(['is_admin' => true]));
+
+        Livewire::test(CarManager::class)
+            ->assertDontSeeHtml('data-test="car-modal"')
+            ->call('openCreate')
+            ->assertSet('showModal', true)
+            ->assertSeeHtml('data-test="car-modal"')
+            ->call('closeModal')
+            ->assertSet('showModal', false)
+            ->assertDontSeeHtml('data-test="car-modal"');
+    }
+
+    public function test_edit_modal_opens_with_car_data_and_closes_after_save(): void
+    {
+        $this->actingAs(User::factory()->create(['is_admin' => true]));
+
+        $car = Car::create([
+            'brand' => 'Skoda',
+            'model' => 'Octavia',
+            'class' => 'comfort',
+            'fuel_type' => 'diesel',
+            'transmission' => 'automatic',
+            'drivetrain' => 'fwd',
+            'engine' => '2.0',
+            'seats' => 5,
+            'price_per_day' => 50,
+            'is_active' => true,
+        ]);
+
+        Livewire::test(CarManager::class)
+            ->call('openEdit', $car->id)
+            ->assertSet('showModal', true)
+            ->assertSet('brand', 'Skoda')
+            ->assertSeeHtml('data-test="car-modal"')
+            ->call('save')
+            ->assertHasNoErrors()
+            ->assertSet('showModal', false)
+            ->assertDontSeeHtml('data-test="car-modal"');
+    }
 }

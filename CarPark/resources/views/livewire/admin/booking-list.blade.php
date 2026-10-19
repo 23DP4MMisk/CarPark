@@ -70,7 +70,11 @@
                                     {{ $statusLabels[$reservation->status] ?? $reservation->status }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-right">
+                            <td class="px-4 py-3 text-right whitespace-nowrap">
+                                <button type="button" wire:click="openDetails('{{ $type }}', {{ $reservation->id }})"
+                                    class="text-sm font-medium text-gray-600 hover:text-gray-900">
+                                    Detaļas
+                                </button>
                                 @if ($reservation->isCancellable())
                                     <button type="button"
                                         wire:click="cancel('{{ $type }}', {{ $reservation->id }})"
@@ -92,4 +96,45 @@
 
         <div class="mt-4">{{ $reservations->links() }}</div>
     </div>
+
+    @if ($selected)
+        <div class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4"
+            wire:keydown.escape.window="closeModal" data-test="booking-modal">
+            <div class="my-8 w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
+                <div class="flex items-start justify-between">
+                    <h2 class="text-lg font-medium text-gray-900">Rezervācija #{{ $selected->id }}</h2>
+                    <button type="button" wire:click="closeModal" class="text-gray-400 hover:text-gray-600" aria-label="Aizvērt">&times;</button>
+                </div>
+
+                <dl class="mt-4 grid grid-cols-3 gap-x-4 gap-y-3 text-sm">
+                    <dt class="text-gray-500">Lietotājs</dt>
+                    <dd class="col-span-2 text-gray-900">{{ $selected->user?->name ?? '—' }}</dd>
+
+                    <dt class="text-gray-500">Tips</dt>
+                    <dd class="col-span-2 text-gray-900">{{ $selectedType === 'car' ? 'Auto' : 'Stāvvieta' }}</dd>
+
+                    <dt class="text-gray-500">Objekts</dt>
+                    <dd class="col-span-2 text-gray-900">
+                        {{ $selectedType === 'car' ? $selected->car?->full_name : $selected->parkingSpot?->name }}
+                    </dd>
+
+                    <dt class="text-gray-500">Sākums</dt>
+                    <dd class="col-span-2 text-gray-900">{{ $selected->start_time->format('Y-m-d H:i') }}</dd>
+
+                    <dt class="text-gray-500">Beigas</dt>
+                    <dd class="col-span-2 text-gray-900">{{ $selected->end_time->format('Y-m-d H:i') }}</dd>
+
+                    <dt class="text-gray-500">Summa</dt>
+                    <dd class="col-span-2 text-gray-900">€{{ $selected->total_price }}</dd>
+
+                    <dt class="text-gray-500">Statuss</dt>
+                    <dd class="col-span-2 text-gray-900">{{ $statusLabels[$selected->status] ?? $selected->status }}</dd>
+                </dl>
+
+                <div class="mt-6 flex justify-end">
+                    <button type="button" wire:click="closeModal" class="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Aizvērt</button>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
