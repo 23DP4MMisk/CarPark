@@ -14,6 +14,8 @@ use Livewire\Component;
 class CarBookingForm extends Component
 {
     /** Papildu pakalpojumi: cena un vai tā tiek rēķināta par katru dienu. */
+    public const MIN_HOURS_AHEAD = 12;
+
     public const EXTRAS = [
         'child_seat' => ['label' => 'Bērnu sēdeklis', 'price' => 5, 'per_day' => true],
         'gps' => ['label' => 'GPS navigācija', 'price' => 5, 'per_day' => true],
@@ -53,6 +55,12 @@ class CarBookingForm extends Component
 
         $start = Carbon::parse($this->start_time);
         $end = Carbon::parse($this->end_time);
+
+        if ($start->lt(now()->addHours(self::MIN_HOURS_AHEAD))) {
+            $this->addError('start_time', 'Rezervācija iespējama vismaz 12 stundas iepriekš.');
+
+            return;
+        }
 
         if (CarReservation::hasConflict('car_id', $this->car->id, $start, $end)) {
             $this->addError('start_time', 'Šī automašīna jau ir rezervēta izvēlētajā laikā.');
