@@ -37,6 +37,9 @@
                             <p class="mt-1 text-sm text-gray-500">
                                 {{ $car->class }} · {{ $car->seats }} vietas · {{ $car->transmission }} · {{ $car->fuel_type }}
                             </p>
+                            <p class="mt-1 text-sm text-gray-600" data-test="car-address">
+                                {{ $car->address ?: 'Adrese nav norādīta' }}
+                            </p>
                         </div>
                         <div class="rounded-lg bg-emerald-50 px-3 py-2 text-right">
                             <div class="text-xs uppercase tracking-wide text-emerald-700">Cena</div>
@@ -51,10 +54,25 @@
                         <div class="font-medium text-gray-800">Atcelšanas noteikumi</div>
                         <p class="mt-1">Rezervāciju iespējams atcelt līdz 24 stundām pirms sākuma laika.</p>
                     </div>
+
+                    @if ($car->lat !== null && $car->lng !== null)
+                        <div wire:ignore id="car-map" data-test="car-map"
+                             class="mt-4 h-40 w-full overflow-hidden rounded-lg shadow-sm"
+                             x-data
+                             x-init="
+                                 const m = L.map($el, { scrollWheelZoom: false }).setView([{{ (float) $car->lat }}, {{ (float) $car->lng }}], 15);
+                                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(m);
+                                 L.marker([{{ (float) $car->lat }}, {{ (float) $car->lng }}]).addTo(m);
+                             "></div>
+                    @endif
                 </div>
             </div>
 
             <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+                <div class="mb-5 rounded-md border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-800" data-test="notice-12h">
+                    Automašīnu var rezervēt vismaz 12 stundas pirms nomas sākuma.
+                </div>
+
                 <form wire:submit="save" class="space-y-5" data-test="booking-form">
                     <div class="grid gap-4 md:grid-cols-2">
                         <div>

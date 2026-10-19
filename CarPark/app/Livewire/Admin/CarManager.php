@@ -47,6 +47,12 @@ class CarManager extends Component
 
     public string $description = '';
 
+    public string $address = '';
+
+    public string $lat = '';
+
+    public string $lng = '';
+
     public bool $is_active = true;
 
     /** @var array<int, \Livewire\Features\SupportFileUploads\TemporaryUploadedFile> */
@@ -66,6 +72,9 @@ class CarManager extends Component
             'seats' => ['required', 'integer', 'min:1', 'max:20'],
             'price_per_day' => ['required', 'numeric', 'min:0', 'max:999999.99'],
             'description' => ['nullable', 'string', 'max:2000'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'lat' => ['nullable', 'required_with:lng', 'numeric', 'between:-90,90'],
+            'lng' => ['nullable', 'required_with:lat', 'numeric', 'between:-180,180'],
             'is_active' => ['boolean'],
             'photos' => ['array', 'max:'.self::MAX_IMAGES],
             'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
@@ -86,6 +95,9 @@ class CarManager extends Component
             'seats' => 'sēdvietu skaits',
             'price_per_day' => 'cena dienā',
             'description' => 'apraksts',
+            'address' => 'adrese',
+            'lat' => 'platums',
+            'lng' => 'garums',
             'photos' => 'attēli',
             'photos.*' => 'attēls',
         ];
@@ -116,6 +128,9 @@ class CarManager extends Component
         $this->seats = (string) $car->seats;
         $this->price_per_day = number_format((float) $car->price_per_day, 2, '.', '');
         $this->description = (string) $car->description;
+        $this->address = (string) $car->address;
+        $this->lat = $car->lat !== null ? number_format((float) $car->lat, 7, '.', '') : '';
+        $this->lng = $car->lng !== null ? number_format((float) $car->lng, 7, '.', '') : '';
         $this->is_active = $car->is_active;
         $this->showModal = true;
     }
@@ -144,6 +159,9 @@ class CarManager extends Component
             'seats' => (int) $this->seats,
             'price_per_day' => number_format((float) $this->price_per_day, 2, '.', ''),
             'description' => $this->description !== '' ? $this->description : null,
+            'address' => $this->address !== '' ? $this->address : null,
+            'lat' => $this->lat !== '' ? number_format((float) $this->lat, 7, '.', '') : null,
+            'lng' => $this->lng !== '' ? number_format((float) $this->lng, 7, '.', '') : null,
             'is_active' => $this->is_active,
         ];
 
@@ -227,7 +245,7 @@ class CarManager extends Component
 
     private function resetForm(): void
     {
-        $this->reset(['carId', 'brand', 'model', 'class', 'fuel_type', 'transmission', 'drivetrain', 'engine', 'seats', 'price_per_day', 'description', 'is_active', 'photos']);
+        $this->reset(['carId', 'brand', 'model', 'class', 'fuel_type', 'transmission', 'drivetrain', 'engine', 'seats', 'price_per_day', 'description', 'address', 'lat', 'lng', 'is_active', 'photos']);
         $this->resetValidation();
     }
 
