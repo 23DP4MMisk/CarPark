@@ -141,6 +141,21 @@
                         <input id="price_per_day" type="text" inputmode="decimal" wire:model="price_per_day" class="mt-1 w-full rounded-md border-gray-300 text-sm shadow-sm">
                         @error('price_per_day') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                     </div>
+                    <div class="md:col-span-2">
+                        <label for="address" class="block text-sm font-medium text-gray-700">Adrese</label>
+                        <input id="address" type="text" wire:model="address" class="mt-1 w-full rounded-md border-gray-300 text-sm shadow-sm">
+                        @error('address') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="lat" class="block text-sm font-medium text-gray-700">Platums (lat)</label>
+                        <input id="lat" type="text" inputmode="decimal" wire:model="lat" placeholder="56.9496487" class="mt-1 w-full rounded-md border-gray-300 text-sm shadow-sm">
+                        @error('lat') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="lng" class="block text-sm font-medium text-gray-700">Garums (lng)</label>
+                        <input id="lng" type="text" inputmode="decimal" wire:model="lng" placeholder="24.1051865" class="mt-1 w-full rounded-md border-gray-300 text-sm shadow-sm">
+                        @error('lng') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                    </div>
                 </div>
 
                 <div class="mt-4">

@@ -16,7 +16,10 @@ Route::get('cars/{car}/book', App\Livewire\Cars\CarBookingForm::class)
     ->middleware('auth')
     ->name('cars.book');
 
-Route::get('parking/{spot}/book', App\Livewire\Parking\ParkingBookingForm::class)
+Route::get('parking', App\Livewire\Parking\ParkingList::class)
+    ->name('parking.index');
+
+Route::get('parking/{spot}/book',App\Livewire\Parking\ParkingBookingForm::class)
     ->middleware('auth')
     ->name('parking.book');
 

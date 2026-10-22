@@ -38,6 +38,12 @@ class BookingList extends Component
     #[Url(except: '')]
     public string $status = '';
 
+    public bool $showModal = false;
+
+    public ?string $selectedType = null;
+
+    public ?int $selectedId = null;
+
     public function updatedType(): void
     {
         $this->resetPage();
@@ -46,6 +52,22 @@ class BookingList extends Component
     public function updatedStatus(): void
     {
         $this->resetPage();
+    }
+
+    public function openDetails(string $type, int $id): void
+    {
+        abort_unless(auth()->user()?->is_admin, 403);
+        abort_unless(isset(self::TYPES[$type]), 404);
+
+        $this->selectedType = $type;
+        $this->selectedId = $id;
+        $this->showModal = true;
+    }
+
+    public function closeModal(): void
+    {
+        $this->reset(['selectedType', 'selectedId']);
+        $this->showModal = false;
     }
 
     public function cancel(string $type, int $id): void
@@ -66,8 +88,21 @@ class BookingList extends Component
     {
         return view('livewire.admin.booking-list', [
             'reservations' => $this->reservations(),
+            'selected' => $this->selectedReservation(),
             'statusLabels' => self::STATUS_LABELS,
         ]);
+    }
+
+    private function selectedReservation(): CarReservation|ParkingReservation|null
+    {
+        if (! $this->showModal || $this->selectedType === null) {
+            return null;
+        }
+
+        $model = self::TYPES[$this->selectedType];
+        $relation = $this->selectedType === 'car' ? 'car' : 'parkingSpot';
+
+        return $model::with(['user', $relation])->find($this->selectedId);
     }
 
     private function reservations(): LengthAwarePaginator

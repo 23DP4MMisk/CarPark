@@ -21,6 +21,8 @@ class Car extends Model
     {
         return [
             'price_per_day' => 'decimal:2',
+            'lat' => 'decimal:7',
+            'lng' => 'decimal:7',
             'rating' => 'decimal:1',
             'is_active' => 'boolean',
         ];
