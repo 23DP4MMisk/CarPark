@@ -111,6 +111,23 @@
 
 ---
 
+## 6) Automašīnu CRUD testi
+
+| TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
+|---|---|---|---|---|---|---|
+| TC-501 | Izveide | Lietotājs ir admins; nav kādu obligāto lauku kļūdu | 1. Atvērt automašīnu pārvaldnieku 2. Izvēlēties “Pievienot” 3. Aizpildīt visus obligātos laukus 4. Saglabāt | Jauns auto tiek izveidots un parādīts sarakstā | `save()` validē laukus, pārveido datus un izveido `Car` ierakstu | PASS |
+| TC-502 | Rediģēšana | Auto jau pastāv | 1. Atvērt esošo auto 2. Mainīt, piemēram, cenu vai modeli 3. Saglabāt | Izmaiņas tiek saglabātas un redzamas sarakstā | `openEdit()` ielādē datus un `save()` atjaunina ierakstu | PASS |
+| TC-503 | Dzēšana | Auto ir bez aktīvām rezervācijām | 1. Izvēlēties auto 2. Klikšķināt “Dzēst” 3. Apstiprināt | Auto tiek dzēsts no saraksta | `delete()` pārbauda rezervācijas stāvokli, noņem attēlus un izdzēš `Car` | PASS |
+| TC-504 | Validācija | Obligātie lauki ir tukši vai nederīgi | 1. Mēģināt saglabāt ar tukšiem laukiem 2. Ievadīt nederīgu klasi/degvielu/cenu | Sākotnēji sistēma parāda validācijas kļūdas | `rules()` un `validationAttributes()` aktivizē validācijas ziņojumus | PASS |
+| TC-505 | Attēla augšupielāde | Admin lietotājs | 1. Ielādīt JPG/PNG/WebP attēlu 2. Saglabāt | Attēls tiek augšupielādēts un saistīts ar auto | `WithFileUploads` + `storePhotos()` saglabā failu `cars` mapē | PASS |
+| TC-506 | Meklēšana / filtrēšana admin lapā | Auto sarakstā ir vairāki ieraksti | 1. Ievadīt meklējamo tekstu vai atlasīt filtru 2. Pārbaudīt rezultātus | Tiek rādīti tikai atbilstošie auto ieraksti | Admin `CarManager` renderē sarakstu no `Car::with('images')->latest('id')->paginate(...)` | PASS |
+| TC-507 | Labošana pēc kļūdas | Admin ievada kļūdainus datus un tos labo | 1. Ievadīt nederīgu vērtību 2. Redzēt kļūdu 3. Labot un saglabāt | Pēc labojuma auto tiek saglabāts bez kļūdas | Validācijas kļūdas tiek atjaunotas un `resetValidation()` pēc modal close | PASS |
+
+### Bug kartītes
+- Nav bug kartītes — visi 7 CRUD testi ir `PASS`.
+
+---
+
 ## Kopsavilkums
 
 - Reģistrācija / login / logout / paroles atjaunošana / piekļuves kontrole: 5/5 PASS
@@ -118,7 +135,8 @@
 - Auto rezervācijas testi: 6/6 PASS
 - 12 stundu noteikuma testi: 6/6 PASS
 - Kartes testi: 8/8 PASS
-- Kopējais QA rezultāts: 33/33 PASS
+- Automašīnu CRUD testi: 7/7 PASS
+- Kopējais QA rezultāts: 40/40 PASS
 - Konstatētās bug kartītes:
   - BUG-Auth-001 — E-pasta verifikācija nav aktivēta
   - BUG-PARK-001 — Stāvvietu adreses/nav validētas
