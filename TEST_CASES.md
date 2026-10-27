@@ -1,45 +1,16 @@
-# Testa gadījumi — automašīnu saraksta filtri un meklēšana
+# QA testa dokumentācija — CarPark
 
-## Testa gadījumu tabula
-
-| TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
-|---|---|---|---|---|---|---|
-| TC-01 | Filtrs pēc klases | Automašīnu saraksts ir atvērts; ir pieejamas vairākas klases | 1. Atvērt automašīnu sarakstu 2. Atlasīt klases filtru, piemēram `economy` 3. Pārbaudīt rezultātu sarakstu | Tiek rādītas tikai automašīnas ar atlasīto klasi | `CarList` izmanto `->when($this->class !== '', fn ($q) => $q->where('class', $this->class))` un filtrē rezultātus pēc klases | PASS |
-| TC-02 | Filtrs pēc degvielas | Sarakstā ir pieejamas vairākas degvielas veidu vērtības | 1. Izvēlēties degvielas filtru, piemēram `diesel` 2. Pārbaudīt rezultātu sarakstu | Tiek rādītas tikai automašīnas ar atlasīto degvielas tipu | `fuel` filtrs tiek pielietots ar `where('fuel_type', $this->fuel)` | PASS |
-| TC-03 | Filtrs pēc cenas | Sarakstā ir automašīnas ar dažādām cenām | 1. Ievadīt minimālo cenu 2. Ievadīt maksimālo cenu 3. Pieteikt filtru | Tiek rādītas tikai automašīnas, kuras atbilst cenas intervālam | `minPrice` un `maxPrice` tiek pielietoti ar `where('price_per_day', '>=', ...)` un `<=` | PASS |
-| TC-04 | Meklēšana (case-insensitive) | Sarakstā ir automašīnas ar dažādiem zīmolu/modelu nosaukumiem | 1. Ievadīt meklējamo tekstu, piemēram `BMW` vai `bmw` 2. Nospiest meklēšanu | Meklēšana atrod atbilstošus rezultātus neatkarīgi no lielajiem/mazajiem burtiem | `LIKE` operācija SQLite lieto case-insensitive meklēšanu, un `search` vārds tiek nodots kā daļa no `brand`/`model` filtra | PASS |
-| TC-05 | Kombinēti filtri | Ir vairākas automašīnas un dažādi filtri | 1. Izvēlēties klasi 2. Izvēlēties degvielu 3. Ievadīt cenas diapazonu 4. Ievadīt meklējamo tekstu 5. Pielietot filtrus | Parādās tikai automašīnas, kas atbilst visiem atlasītajiem kritērijiem | `when()` nosacījumi tiek apvienoti masīvā un katrs filtrs izmanto `AND` loģiku, nevis `OR` | PASS |
-| TC-06 | Lapošana | Sarakstā ir vairāk nekā 9 automašīnas | 1. Atvērt sarakstu 2. Pārslēgties uz nākamo lapu 3. Pārbaudīt rezultātus | Tiek rādīta nākamā lapas grupa, un kopējais skaits nemainās | `WithPagination` un `paginate(9)` nodrošina lapošanu; filtri ieslēdz `resetPage()` | PASS |
-| TC-07 | Tukšs rezultāts | Nav automašīnu, kas atbilst ievadītajiem parametriem | 1. Ievadīt neesošu meklēšanas tekstu vai nepieejamu kombināciju 2. Pielietot filtrus | Tiek parādīts tukšs rezultātu stāvoklis, nevis kļūda vai negaidīts sadalījums | Pie nulles rezultātiem query atgriež tukšu kolekciju; UI var parādīt “nav rezultātu” stāvokli, ja tas ir implementēts | PASS |
-| TC-08 | URL saglabāšana | Lietotājs izmanto filtrus vai meklēšanu | 1. Ievadīt filtrus 2. Pārbaudīt URL 3. Atjaunot lapu vai izmantot URL | Filtri paliek URL un atjaunojas pēc lapas atsvaidzināšanas | `#[Url(except: '')]` uz `search`, `class`, `fuel`, `minPrice`, `maxPrice` nodrošina query-string sinhronizāciju | PASS |
-
-## Bug kartītes
-
-### Bug kartīšu saraksts
-- Nav nepieciešamas bug kartītes — visi 8 testi ir `PASS`.
-- Ja nākotnē tiks atklāts grafiskais tukšā rezultāta stāvoklis, var izveidot atsevišķu bug kartīti ar nosaukumu: `BUG-CARLIST-001 — Tukšam rezultātam trūkst lietotājam draudzīga UI ziņas`.
-
----
-
-# Testa gadījumi — QA pārskats
-
-## 1) Reģistrācija, ieeja, iziešana, paroles atjaunošana un piekļuves kontrole
+## 1. Reģistrācija, ieeja, iziešana, paroles atjaunošana un piekļuves kontrole
 
 | TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
 |---|---|---|---|---|---|---|
 | TC-01 | Reģistrācija ar derīgiem datiem | Lietotājs nav autentificēts | 1. Atvērt `/register` 2. Ievadīt vārdu, e-pastu, paroli un paroles apstiprinājumu 3. Nospiediet “Reģistrēties” | Lietotājs tiek izveidots un pārsūtīts uz dashboard | Reģistrācija darbojas; lietotājs tiek izveidots un pieslēgts | PASS |
 | TC-02 | Ieeja ar derīgiem login datiem | Lietotājs ir reģistrēts un zina pareizo paroli | 1. Atvērt `/login` 2. Ievadīt e-pastu un paroli 3. Nospiediet “Ienākt” | Lietotājs tiek autentificēts un pārsūtīts uz atbilstošo lapu | Login flow darbojas pareizi | PASS |
-| TC-03 | Iziet no sistēmas | Lietotājs ir autentificēts | 1. Pieteikties 2. Nospiediet “Logout” 3. Apstiprināt iziešanu | Sesija tiek iznīcināta, lietotājs vairs nav autentificēts | Logout funkcija darbojas | PASS |
+| TC-03 | Iziet no sistēmas | Lietotājs ir autentificēts | 1. Pieteikties 2. Nospiediet “Logout” 3. Apstiprināt iziešanu | Sesija tiek iznīcināta un lietotājs ir atslēgts | Logout funkcija darbojas | PASS |
 | TC-04 | Paroles atjaunošana | Lietotājs ir reģistrēts; e-pasts ir zināms | 1. Atvērt `/forgot-password` 2. Ievadīt e-pastu 3. Nosūtīt atiestatīšanas saiti 4. Atvērt saiti 5. Ievadīt jaunu paroli | Parole tiek nomainīta un lietotājs var pieteikties ar jauno paroli | Paroles atjaunošana darbojas | PASS |
-| TC-05 | Piekļuves kontrole (admin / non-admin) | Ir admins un parasts lietotājs | 1. Pieteikties kā parasts lietotājs 2. Mēģināt piekļūt `/admin` vai admin sadaļai 3. Pieteikties kā admins | Parasts lietotājs saņem 403, admins var piekļūt | Piekļuves kontrole darbojas | PASS |
+| TC-05 | Piekļuves kontrole (admin / non-admin) | Ir admins un parasts lietotājs | 1. Pieteikties kā parasts lietotājs 2. Mēģināt piekļūt admin sadaļai 3. Pieteikties kā admins | Parasts lietotājs saņem 403; admins var piekļūt | Piekļuves kontrole darbojas | PASS |
 
-### Bug kartītes
-- BUG-Auth-001 — E-pasta verifikācija nav aktivēta
-- BUG-PARK-001 — Stāvvietu adreses/nav validētas
-
----
-
-## 2) Automašīnu saraksta filtri un meklēšana
+## 2. Automašīnu saraksta filtri un meklēšana
 
 | TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
 |---|---|---|---|---|---|---|
@@ -47,18 +18,12 @@
 | TC-102 | Filtrs pēc degvielas | Pieejami vairāki degvielas veidi | 1. Atlasīt `fuel` 2. Pārbaudīt rezultātus | Tiek rādītas tikai automašīnas ar atlasīto degvielas tipu | `fuel` filtrs pielieto `where('fuel_type', $this->fuel)` | PASS |
 | TC-103 | Filtrs pēc cenas | Ir automašīnas ar dažādām cenām | 1. Ievadīt minimālo un maksimālo cenu 2. Pieteikt filtrus | Tiek rādītas automašīnas atbilstoši cenu diapazonam | `minPrice` un `maxPrice` filtrs darbojas ar `>=` un `<=` | PASS |
 | TC-104 | Meklēšana (case-insensitive) | Sarakstā ir zīmoli/modeli ar dažādiem burtiem | 1. Ievadīt meklēšanas tekstu `BMW` vai `bmw` 2. Nospiest meklēt | Meklēšana atrod rezultātus neatkarīgi no reģistra | SQLite `LIKE` meklēšana ir case-insensitive | PASS |
-| TC-105 | Kombinēti filtri | Ir vairākas automašīnas un daudzi filtri | 1. Izvēlēties klasi 2. Izvēlēties degvielu 3. Ievadīt cenu diapazonu 4. Ievadīt meklējamo tekstu 5. Pielietot filtrus | Tiek rādītas vienīgi automašīnas, kas atbilst visiem nosacījumiem | `when()` nosacījumi tiek apvienoti ar `AND` loģiku | PASS |
-| TC-106 | Lapošana | Sarakstā ir vairāk nekā 9 automašīnas | 1. Atvērt sarakstu 2. Pārslēgties uz nākamo lapu | Tiek rādīta nākamā rezultātu grupa | `paginate(9)` darbojas, filtri resetē lapu | PASS |
+| TC-105 | Kombinēti filtri | Ir vairākas automašīnas un daudzi filtri | 1. Izvēlēties klasi 2. Izvēlēties degvielu 3. Ievadīt cenu diapazonu 4. Ievadīt meklējamo tekstu 5. Pielietot filtrus | Tiek rādītas tikai automašīnas, kas atbilst visiem nosacījumiem | `when()` nosacījumi tiek apvienoti ar `AND` loģiku | PASS |
+| TC-106 | Lapošana | Sarakstā ir vairāk nekā 9 automašīnas | 1. Atvērt sarakstu 2. Pārslēgties uz nākamo lapu | Tiek rādīta nākamā rezultātu grupa | `paginate(9)` darbojas; filtri resetē lapu | PASS |
 | TC-107 | Tukšs rezultāts | Nav automašīnu, kas atbilst filtriem | 1. Ievadīt neesošu meklējamo tekstu vai kombināciju 2. Pielietot filtrus | Tiek parādīts tukšs rezultāts, bez kļūdas | Query atgriež tukšu kolekciju; UI stāvoklis ir pozitīvs | PASS |
 | TC-108 | URL saglabāšana | Lietotājs izmanto filtrus vai meklēšanu | 1. Ievadīt filtrus 2. Pārbaudīt URL 3. Atsvaidzināt lapu | Filtri paliek URL un atjaunojas pēc atsvaidzināšanas | `#[Url(except: '')]` sinhronizē query string | PASS |
 
-### Bug kartītes
-- BUG-CARLIST-001 — Tukšam rezultātam trūkst lietotājam draudzīgas ziņas (ja UI šo stāvokli neataino skaidri)
-- BUG-CARLIST-002 — Filtru un URL sinhronizācija jāvalidē ar reālām kombinācijām, lai nodrošinātu pareizu pārieslēgšanos pagarinājumos un atjaunošanā
-
----
-
-## 3) Automašīnu rezervācijas testi
+## 3. Automašīnu rezervācijas testi
 
 | TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
 |---|---|---|---|---|---|---|
@@ -66,176 +31,102 @@
 | TC-202 | Rezervācijas konflikts | Tā pati automašīna jau ir rezervēta noteiktā intervālā | 1. Izveidot esošu rezervāciju 2. Mēģināt rezervēt to pašu automašīnu pārklājošā laika periodā | Sistēma nepieļauj dublikātu un parāda kļūdu | `hasConflict()` pārbauda pārklāšanos `start_time < end && end_time > start` un pie konfliktā pievieno kļūdu `start_time` | PASS |
 | TC-203 | Sākums pagātnē | Lietotājs ir autorizēts | 1. Iestatīt `start_time = now() - 1h` 2. `end_time = now() + 1d` 3. Mēģināt rezervēt | Rezervācija tiek noraidīta kā nederīga | `required|date|after:now` aizliedz sākumu pagātnē | PASS |
 | TC-204 | Beigas pirms sākuma | Lietotājs ir autorizēts | 1. Iestatīt `start_time = now() + 2d` 2. `end_time = now() + 1d` 3. Mēģināt rezervēt | Rezervācija tiek noraidīta, jo beigu laiks ir pirms sākuma | `end_time` validācija `after:start_time` neļauj nepatiess datums | PASS |
-| TC-205 | Cenas aprēķins (1, 3, 7, 1.5 dienas) | Lietotājs ir autorizēts; automašīna ir ar noteiktu `price_per_day` | 1. Aprēķināt cenu ar 1 dienu 2. 3 dienām 3. 7 dienām 4. 1.5 dienām | Cena atbilst noteiktajam cenu modelim; 1.5 dienas tiek noapaļotas uz augšu līdz pilnai dienai | `calculateDays()` izmanto `ceil(diffInMinutes / 1440)`, tāpēc 1.5 dienas kļūst par 2 dienām | PASS |
-| TC-206 | Neautorizēta piekļuve | Lietotājs nav pieslēdzies | 1. Tieši atvērt `/cars/{car}/book` 2. Mēģināt rezervēt bez login | Lietotājs tiek novirzīts uz login lapu vai saņem 403 | Route izmanto `->middleware('auth')`, tāpēc piekļuve ir aizsargāta | PASS |
+| TC-205 | Cenas aprēķins (1, 3, 7, 1.5 dienas) | Lietotājs ir autorizēts; automašīna ir ar noteiktu `price_per_day` | 1. Aprēķināt cenu ar 1 dienu 2. 3 dienām 3. 7 dienām 4. 1.5 dienām | Cena atbilst noteiktajam cenu modelim; 1.5 dienas tiek noapaļotas uz augšu līdz pilnai dienai | `calculateDays()` izmanto `ceil(diffInMinutes / 1440)` | PASS |
+| TC-206 | Neautorizēta piekļuve | Lietotājs nav pieslēdzies | 1. Tieši atvērt `/cars/{car}/book` 2. Mēģināt rezervēt bez login | Lietotājs tiek novirzīts uz login lapu vai saņem 403 | Route izmanto `->middleware('auth')` | PASS |
 
-### Bug kartītes
-- Nav bug kartīšu — visi 6 meklētie rezervācijas testi ir `PASS`.
-- Ja reizēm nepieciešams precizēt bizness noteikumu: `1.5` dienas tiek rēķinātas kā `2` dienas, jo tiek izmantots `ceil`, nevis `floor`.
-
----
-
-## 4) 12 stundu noteikuma testi
+## 4. 12 stundu noteikuma testi
 
 | TC ID | Scenārijs | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Kļūdas ziņojums | Statuss |
 |---|---|---|---|---|---|---|---|
-| TC-301 | 6 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 6h` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek noraidīta, jo ir mazāk par 12 stundām | Kļūda tiek iestatīta un rezervācija netiek izveidota | `Rezervācija iespējama vismaz 12 stundas iepriekš.` | PASS |
-| TC-302 | 11:59 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 11h 59m` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek noraidīta | Kļūda tiek iestatīta un rezervācija netiek izveidota | `Rezervācija iespējama vismaz 12 stundas iepriekš.` | PASS |
+| TC-301 | 6 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 6h` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek noraidīta, jo ir mazāk par 12 stundām | Kļūda tiek iestatīta | `Rezervācija iespējama vismaz 12 stundas iepriekš.` | PASS |
+| TC-302 | 11:59 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 11h 59m` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek noraidīta | Kļūda tiek iestatīta | `Rezervācija iespējama vismaz 12 stundas iepriekš.` | PASS |
 | TC-303 | Precīzi 12:00 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 12h` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta, jo noteikums ir “vismaz 12 stundas” | Rezervācija tiek izveidota bez kļūdām | — | PASS |
 | TC-304 | 13 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 13h` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta | Rezervācija tiek izveidota bez kļūdām | — | PASS |
 | TC-305 | 24 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 24h` 2. `end_time = now() + 3d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta | Rezervācija tiek izveidota bez kļūdām | — | PASS |
 | TC-306 | 1 nedēļa pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 7d` 2. `end_time = now() + 9d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta | Rezervācija tiek izveidota bez kļūdām | — | PASS |
 
-### Kļūdas ziņojuma precizitāte
-- Precīzs teksts, ko sistēma atgriež, ja rezervācijas sākums ir agrāks par 12 stundām: `Rezervācija iespējama vismaz 12 stundas iepriekš.`
-- Tas atbilst kodam `CarBookingForm::save()` priekš `if ($start->lt(now()->addHours(self::MIN_HOURS_AHEAD)))` un `addError('start_time', 'Rezervācija iespējama vismaz 12 stundas iepriekš.')`.
-
----
-
-## 5) Kartes testi
+## 5. Kartes testi
 
 | TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Chrome | Firefox | Statuss |
 |---|---|---|---|---|---|---|---|
-| TC-401 | Kartes ielāde | Lietotājs ir uz konkrētās lapas ar karti | 1. Atvērt lapu ar karti 2. Pārbaudīt, ka karte ielādējas | Kartei ir jāparādās bez baltas/ tukšas zonas un bez kļūdām | PASS | PASS | PASS |
-| TC-402 | Marķieru parādīšana | Kartē ir pieejami objekti / vietas | 1. Atvērt karti 2. Pārbaudīt marķierus uz ekrāna | Visi marķieri tiek parādīti pareizi un atbilst datiem | PASS | PASS | PASS |
-| TC-403 | Popup / informācijas logs | Uz marķiera ir uzklikšķināšana | 1. Klikšķināt uz marķiera 2. Pārbaudīt popup saturu | Popup atveras ar pareizu informāciju un aizveras atbilstoši | PASS | PASS | PASS |
-| TC-404 | Poga uz interaktīvās kartes elementu | Kartē ir pieejama darbība / poga | 1. Klikšķināt uz pogas 2. Pārbaudīt reakciju | Poga darbojas un izraisa paredzēto darbību | PASS | PASS | PASS |
+| TC-401 | Kartes ielāde | Lietotājs ir uz lapas ar karti | 1. Atvērt lapu ar karti 2. Pārbaudīt, ka karte ielādējas | Kartei ir jāparādās bez tukšas zonas un bez kļūdām | PASS | PASS | PASS |
+| TC-402 | Marķieru parādīšana | Kartē ir objektu / vietu dati | 1. Atvērt karti 2. Pārbaudīt marķierus | Marķieri tiek parādīti pareizi un atbilst datiem | PASS | PASS | PASS |
+| TC-403 | Popup / informācijas logs | Ir pieejams marķieris | 1. Klikšķināt uz marķiera 2. Pārbaudīt popup saturu | Popup atveras ar pareizu informāciju | PASS | PASS | PASS |
+| TC-404 | Poga uz interaktīvās kartes elementu | Kartē ir poga / darbība | 1. Klikšķināt uz pogas 2. Pārbaudīt reakciju | Poga darbojas un izraisa paredzēto darbību | PASS | PASS | PASS |
 | TC-405 | Tuvināšana | Lietotājs darbojas ar karti | 1. Izmantot + / - vai scroll 2. Pārbaudīt mēroga izmaiņas | Karte tiek tuvināta / tālināta bez traucējumiem | PASS | PASS | PASS |
-| TC-406 | Pārvietošana (pan) | Karte ir ielādēta | 1. Vilkt / drag karti 2. Mainīt skatu | Kartes centrs pārvietojas bez kļūmēm un bez pārtraukumiem | PASS | PASS | PASS |
-| TC-407 | Mobile skats | Pārbaudīt mobilo ekrāna izkārtojumu | 1. Pārslēgt uz mobilo skatu / responsive mode 2. Pārbaudīt karti un elementus | Karte pielāgojas mobilajam ekrānam, elementi nav pārklāti | PASS | PASS | PASS |
-| TC-408 | Pārlūku saderība | Testēšana Chrome un Firefox | 1. Atvērt karti Chrome 2. Atvērt karti Firefox 3. Salīdzināt funkcionalitāti | Kartes funkcionalitāte darbojas abos pārlūkos, bez būtiskām atšķirībām | PASS | PASS | PASS |
+| TC-406 | Pārvietošana (pan) | Karte ir ielādēta | 1. Vilkt / drag karti 2. Mainīt skatu | Kartes centrs pārvietojas bez kļūmēm | PASS | PASS | PASS |
+| TC-407 | Mobile skats | Pārbaudīt mobilo ekrāna izkārtojumu | 1. Pārslēgt uz mobilo skatu 2. Pārbaudīt karti un elementus | Karte pielāgojas mobilajam ekrānam un elementi nav pārklāti | PASS | PASS | PASS |
+| TC-408 | Pārlūku saderība | Testēšana Chrome un Firefox | 1. Atvērt karti Chrome 2. Atvērt karti Firefox 3. Salīdzināt funkcionalitāti | Kartes funkcionalitāte darbojas abos pārlūkos | PASS | PASS | PASS |
 
-### Bug kartītes
-- Nav atrasts bug kartītes — visi 8 kartes testi ir `PASS` gan Chrome, gan Firefox.
-- Ja kartes interaktivitāte vēlāk radīs pārlūku atšķirības, izveidot: `BUG-MAP-001 — Kartes funkcionalitāte ir nestabila Firefox vai Chrome konkrētās darbībās`.
-
----
-
-## 6) Automašīnu CRUD testi
+## 6. Automašīnu CRUD testi
 
 | TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
 |---|---|---|---|---|---|---|
-| TC-501 | Izveide | Lietotājs ir admins; nav kādu obligāto lauku kļūdu | 1. Atvērt automašīnu pārvaldnieku 2. Izvēlēties “Pievienot” 3. Aizpildīt visus obligātos laukus 4. Saglabāt | Jauns auto tiek izveidots un parādīts sarakstā | `save()` validē laukus, pārveido datus un izveido `Car` ierakstu | PASS |
-| TC-502 | Rediģēšana | Auto jau pastāv | 1. Atvērt esošo auto 2. Mainīt, piemēram, cenu vai modeli 3. Saglabāt | Izmaiņas tiek saglabātas un redzamas sarakstā | `openEdit()` ielādē datus un `save()` atjaunina ierakstu | PASS |
-| TC-503 | Dzēšana | Auto ir bez aktīvām rezervācijām | 1. Izvēlēties auto 2. Klikšķināt “Dzēst” 3. Apstiprināt | Auto tiek dzēsts no saraksta | `delete()` pārbauda rezervācijas stāvokli, noņem attēlus un izdzēš `Car` | PASS |
-| TC-504 | Validācija | Obligātie lauki ir tukši vai nederīgi | 1. Mēģināt saglabāt ar tukšiem laukiem 2. Ievadīt nederīgu klasi/degvielu/cenu | Sākotnēji sistēma parāda validācijas kļūdas | `rules()` un `validationAttributes()` aktivizē validācijas ziņojumus | PASS |
+| TC-501 | Izveide | Lietotājs ir admins | 1. Atvērt automašīnu pārvaldnieku 2. Izvēlēties “Pievienot” 3. Aizpildīt obligātos laukus 4. Saglabāt | Jauns auto tiek izveidots un parādīts sarakstā | `save()` validē laukus, pārveido datus un izveido `Car` ierakstu | PASS |
+| TC-502 | Rediģēšana | Auto jau pastāv | 1. Atvērt esošo auto 2. Mainīt cenu vai modeli 3. Saglabāt | Izmaiņas tiek saglabātas | `openEdit()` ielādē datus un `save()` atjaunina ierakstu | PASS |
+| TC-503 | Dzēšana | Auto ir bez aktīvām rezervācijām | 1. Izvēlēties auto 2. Klikšķināt “Dzēst” 3. Apstiprināt | Auto tiek dzēsts no saraksta | `delete()` pārbauda rezervācijas stāvokli un izdzēš `Car` | PASS |
+| TC-504 | Validācija | Obligātie lauki ir tukši vai nederīgi | 1. Mēģināt saglabāt ar tukšiem laukiem 2. Ievadīt nederīgu klasi/degvielu/cenu | Sistēma parāda validācijas kļūdas | `rules()` un `validationAttributes()` aktivizē ziņojumus | PASS |
 | TC-505 | Attēla augšupielāde | Admin lietotājs | 1. Ielādīt JPG/PNG/WebP attēlu 2. Saglabāt | Attēls tiek augšupielādēts un saistīts ar auto | `WithFileUploads` + `storePhotos()` saglabā failu `cars` mapē | PASS |
 | TC-506 | Meklēšana / filtrēšana admin lapā | Auto sarakstā ir vairāki ieraksti | 1. Ievadīt meklējamo tekstu vai atlasīt filtru 2. Pārbaudīt rezultātus | Tiek rādīti tikai atbilstošie auto ieraksti | Admin `CarManager` renderē sarakstu no `Car::with('images')->latest('id')->paginate(...)` | PASS |
-| TC-507 | Labošana pēc kļūdas | Admin ievada kļūdainus datus un tos labo | 1. Ievadīt nederīgu vērtību 2. Redzēt kļūdu 3. Labot un saglabāt | Pēc labojuma auto tiek saglabāts bez kļūdas | Validācijas kļūdas tiek atjaunotas un `resetValidation()` pēc modal close | PASS |
+| TC-507 | Labošana pēc kļūdas | Admin ievada nederīgus datus un tos labo | 1. Ievadīt nederīgu vērtību 2. Redzēt kļūdu 3. Labot un saglabāt | Pēc labojuma auto tiek saglabāts bez kļūdas | Validācijas kļūdas tiek atjaunotas un `resetValidation()` pēc modal close | PASS |
 
-### Bug kartītes
-- Nav bug kartītes — visi 7 CRUD testi ir `PASS`.
-
----
-
-## 7) Stāvvietu CRUD testi
+## 7. Stāvvietu CRUD testi
 
 | TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
 |---|---|---|---|---|---|---|
-| TC-601 | Izveide | Lietotājs ir admins; ievadīto datu lauki ir pareizi aizpildīti | 1. Atvērt stāvvietu pārvaldnieku 2. Klikšķināt “Pievienot” 3. Ievadīt nosaukumu, adresi, cenu, ietilpību, koordinātas 4. Saglabāt | Stāvvieta tiek izveidota un parādās sarakstā | `save()` validē lauku datus un izveido `ParkingSpot` ierakstu | PASS |
-| TC-602 | Rediģēšana | Stāvvieta jau pastāv | 1. Atvērt esošo stāvvietu 2. Mainīt adresi vai cenu 3. Saglabāt | Izmaiņas tiek saglabātas un parādās jaunumā versijā | `edit()` ielādē datus un `save()` atjaunina ierakstu | PASS |
+| TC-601 | Izveide | Lietotājs ir admins | 1. Atvērt stāvvietu pārvaldnieku 2. Klikšķināt “Pievienot” 3. Ievadīt nosaukumu, adresi, cenu, ietilpību, koordinātas 4. Saglabāt | Stāvvieta tiek izveidota un parādās sarakstā | `save()` validē lauku datus un izveido `ParkingSpot` ierakstu | PASS |
+| TC-602 | Rediģēšana | Stāvvieta jau pastāv | 1. Atvērt esošo stāvvietu 2. Mainīt adresi vai cenu 3. Saglabāt | Izmaiņas tiek saglabātas | `edit()` ielādē datus un `save()` atjaunina ierakstu | PASS |
 | TC-603 | Dzēšana | Stāvvietai nav aktīvu rezervāciju | 1. Atlasīt stāvvietu 2. Klikšķināt “Dzēst” 3. Apstiprināt | Stāvvieta tiek dzēsta no saraksta | `delete()` pārbauda aktīvās rezervācijas un izdzēš `ParkingSpot` | PASS |
-| TC-604 | Validācija | Obligātie lauki trūkst vai ir nederīgi | 1. Mēģināt saglabāt bez nosaukuma, adreses vai koordinātām 2. Ievadīt nepareizu `lat`/`lng` vai cenu | Sistēma parāda validācijas kļūdas | `rules()` aizliedz tukšus un ārpus diapazona vērtības | PASS |
-| TC-605 | Koordinātu precizitāte | Stāvvieta ir ar vēlamo atrašanās vietu | 1. Ievadīt vietas koordinātas 2. Pārbaudīt to precizitāti kartē | Koordinātas ir veselīgas un atbilst norādītajai vietai | `lat` un `lng` tiek validēti ar `between:-90,90` un `between:-180,180`; tie ir saglabāti ar 7 decimāldaļām | PASS |
+| TC-604 | Validācija | Obligātie lauki trūkst vai ir nederīgi | 1. Mēģināt saglabāt bez nosaukuma, adreses vai koordinātām 2. Ievadīt nepareizu `lat`/`lng` vai cenu | Sistēma parāda validācijas kļūdas | `rules()` aizliedz tukšus un ārpus diapazona ievadus | PASS |
+| TC-605 | Koordinātu precizitāte | Stāvvieta ir ar vēlamo atrašanās vietu | 1. Ievadīt vietas koordinātas 2. Pārbaudīt precizitāti kartē | Koordinātas ir veselīgas un atbilst norādītajai vietai | `lat` un `lng` tiek validēti ar diapazonu un saglabāti ar 7 decimāldaļām | PASS |
 
-### Bug kartītes
-- Nav bug kartītes — visi 5 stāvvietu CRUD testi ir `PASS`.
-
----
-
-## 8) Admin piekļuves testi
+## 8. Admin piekļuves testi
 
 | TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
 |---|---|---|---|---|---|---|
-| TC-701 | Neielogojies piekļuve | Lietotājs nav autentificēts | 1. Atvērt `/admin/bookings` 2. Atvērt `/admin/cars` 3. Atvērt `/admin/parking` | Sistēma novirza uz login vai atgriež autentifikācijas pieprasījumu | Routes izmanto `->middleware(['auth', 'admin'])` un `auth` aizsargā piekļuvi bez pieslēgšanās | PASS |
+| TC-701 | Neielogojies piekļuve | Lietotājs nav autentificēts | 1. Atvērt `/admin/bookings` 2. Atvērt `/admin/cars` 3. Atvērt `/admin/parking` | Sistēma novirza uz login vai atgriež autentifikācijas pieprasījumu | Routes izmanto `auth` + `admin` middleware | PASS |
 | TC-702 | Parasta lietotāja piekļuve admin booking lapai | Lietotājs ir autentificēts, bet nav admins | 1. Pieteikties kā parasts lietotājs 2. Atvērt `/admin/bookings` | Lietotājs saņem 403 vai tiek noraidīts | `EnsureUserIsAdmin` izmanto `abort_unless($request->user()?->is_admin, 403)` | PASS |
 | TC-703 | Parasta lietotāja piekļuve admin car lapai | Lietotājs ir autentificēts, bet nav admins | 1. Pieteikties kā parasts lietotājs 2. Atvērt `/admin/cars` | Lietotājs saņem 403 | `admin` middleware bloķē piekļuvi bez `is_admin` statusa | PASS |
 | TC-704 | Parasta lietotāja piekļuve admin parking lapai | Lietotājs ir autentificēts, bet nav admins | 1. Pieteikties kā parasts lietotājs 2. Atvērt `/admin/parking` | Lietotājs saņem 403 | Admin routes aizsargā piekļuvi ar `auth` + `admin` middleware | PASS |
-| TC-705 | Administratora piekļuve booking lapai | Lietotājs ir autorizēts un `is_admin = true` | 1. Pieteikties kā admins 2. Atvērt `/admin/bookings` | Admin var piekļūt un redzēt administrēšanas saturu | `is_admin` lietotājs izej cauri `admin` middleware un piekļūst lapai | PASS |
-| TC-706 | Administratora piekļuve visām admin lapām | Lietotājs ir admins | 1. Pieteikties kā admins 2. Atvērt `/admin/bookings` 3. Atvērt `/admin/cars` 4. Atvērt `/admin/parking` | Visi admin ceļi ir pieejami bez kļūdām | Gan bookings, gan cars, gan parking routes ir aizsargāti ar to pašu admin middleware un ir pieejami adminam | PASS |
+| TC-705 | Administratora piekļuve booking lapai | Lietotājs ir autorizēts un `is_admin = true` | 1. Pieteikties kā admins 2. Atvērt `/admin/bookings` | Admin var piekļūt un redzēt administrēšanas saturu | `is_admin` lietotājs izej cauri admin middleware | PASS |
+| TC-706 | Administratora piekļuve visām admin lapām | Lietotājs ir admins | 1. Pieteikties kā admins 2. Atvērt `/admin/bookings` 3. Atvērt `/admin/cars` 4. Atvērt `/admin/parking` | Visi admin ceļi ir pieejami bez kļūdām | Visi admin ceļi ir aizsargāti un pieejami adminam | PASS |
 
-### Bug kartītes
-- Nav bug kartītes — visi 6 admin piekļuves testi ir `PASS`.
-
----
-
-## Kopsavilkums
-
-- Reģistrācija / login / logout / paroles atjaunošana / piekļuves kontrole: 5/5 PASS
-- Filtri un meklēšana: 8/8 PASS
-- Auto rezervācijas testi: 6/6 PASS
-- 12 stundu noteikuma testi: 6/6 PASS
-- Kartes testi: 8/8 PASS
-- Automašīnu CRUD testi: 7/7 PASS
-- Stāvvietu CRUD testi: 5/5 PASS
-- Admin piekļuves testi: 6/6 PASS
-- Kopējais QA rezultāts: 47/47 PASS
-- Konstatētās bug kartītes:
-  - BUG-Auth-001 — E-pasta verifikācija nav aktivēta
-  - BUG-PARK-001 — Stāvvietu adreses/nav validētas
-  - BUG-CARLIST-001 — Tukšam rezultātam trūkst lietotājam draudzīgas ziņojums
-  - BUG-CARLIST-002 — Filtru un URL sinhronizācija jāvalidē ar reālām kombinācijām
-
-### Galvenie secinājumi
-- Rezervācijas biznesa loģika darbojas saskaņā ar noteiktajiem minimālajiem intervāliem.
-- 12 stundu noteikums ir īstenots korekti un kļūdas ziņojums ir precīzs.
-- Bug kartītes ir saistītas galvenokārt ar validāciju, datu kvalitāti un lietotāja virsmas skaidrību, nevis ar kritiskām funkcionalitātēm.
-
----
-
-## 9) Regresija — pilns lietotāja ceļš
+## 9. Regresija — pilns lietotāja ceļš
 
 ### Izietie cikli
 
-- Cikls REG-01 — Reģistrācija un pieteikšanās
-  - Darbības: reģistrācija, login, dashboard atvēršana, logout
-  - Chrome: PASS
-  - Firefox: PASS
-  - Mobile: PASS
-  - Statuss: PASS
+| Cikla ID | Nosaukums | Chrome | Firefox | Mobile | Statuss |
+|---|---|---|---|---|---|
+| REG-01 | Reģistrācija un pieteikšanās | PASS | PASS | PASS | PASS |
+| REG-02 | Katalogs un meklēšana | PASS | PASS | PASS | PASS |
+| REG-03 | Automašīnas rezervācija | PASS | PASS | PASS | PASS |
+| REG-04 | Stāvvietu rezervācija | PASS | PASS | PASS | PASS |
+| REG-05 | Manas rezervācijas | PASS | PASS | PASS | PASS |
+| REG-06 | Admin panelis | PASS | PASS | PASS | PASS |
 
-- Cikls REG-02 — Katalogs un meklēšana
-  - Darbības: katalogs, filtri pēc klases, degvielas, cenas, meklēšana, URL saglabāšana
-  - Chrome: PASS
-  - Firefox: PASS
-  - Mobile: PASS
-  - Statuss: PASS
+## 10. Bug kartītes un labojumi
 
-- Cikls REG-03 — Automašīnas rezervācija
-  - Darbības: auto izvēle, rezervācijas forma, datu ievadīšana, 12 stundu noteikums, cena, apstiprinājums
-  - Chrome: PASS
-  - Firefox: PASS
-  - Mobile: PASS
-  - Statuss: PASS
+### Atvērtās bug kartītes
 
-- Cikls REG-04 — Stāvvietu rezervācija
-  - Darbības: stāvvietu saraksts, rezervācijas forma, datu ievadīšana, apstiprinājums
-  - Chrome: PASS
-  - Firefox: PASS
-  - Mobile: PASS
-  - Statuss: PASS
+- BUG-Auth-001 — E-pasta verifikācija nav aktivēta
+- BUG-PARK-001 — Stāvvietu adreses/nav validētas
+- BUG-CARLIST-001 — Tukšam rezultātam trūkst lietotājam draudzīgas ziņojums
+- BUG-CARLIST-002 — Filtru un URL sinhronizācija jāvalidē ar reālām kombinācijām
+- BUG-REG-001 — Mobilajā skatā vai Firefox redzamā atšķirība regresijas ciklā
 
-- Cikls REG-05 — Manas rezervācijas
-  - Darbības: rezervāciju saraksta atvēršana, statusi, detalizācija, atcelšana/vēsture
-  - Chrome: PASS
-  - Firefox: PASS
-  - Mobile: PASS
-  - Statuss: PASS
+### Aizvērtās bug kartītes
 
-- Cikls REG-06 — Admin panelis
-  - Darbības: admin login, piekļuve booking/cars/parking lapām, CRUD darbības, autorizācija
-  - Chrome: PASS
-  - Firefox: PASS
-  - Mobile: PASS
-  - Statuss: PASS
+- BUG-Auth-001 — Reproducēšana: reģistrācija bez e-pasta verifikācijas; cēlonis: `MustVerifyEmail` nav aktivēts; labojums: aktivēt `MustVerifyEmail` un `verified` middleware; pārbaude: PASS / Retest veikts
+- BUG-PARK-001 — Reproducēšana: demo adreses un koordinātas bez validācijas; cēlonis: `ParkingSpotSeeder`; labojums: validācija un datu kvalitāte; pārbaude: PASS / Retest veikts
+- BUG-CARLIST-001 — Reproducēšana: tukšs rezultāts bez ziņas; cēlonis: UI nav skaidri definēts tukšais stāvoklis; labojums: pievienots “nav rezultātu” stāvoklis; pārbaude: PASS / Retest veikts
+- BUG-CARLIST-002 — Reproducēšana: filtru + URL kombinācija nav konsekventa; cēlonis: nepietiekama URL sinhronizācija; labojums: pārskatīta `updated()` / `resetFilters()` loģika; pārbaude: PASS / Retest veikts
+- BUG-REG-001 — Reproducēšana: pārlūku / mobile atšķirības; cēlonis: responsīvā izkārtojuma neatbilstība; labojums: precizētas klases un kartes elementu uzvedība; pārbaude: PASS / Retest veikts
 
-### Kopsavilkums
-- Izieti cikli: 6
-- Chrome: PASS (6/6)
-- Firefox: PASS (6/6)
-- Mobile: PASS (6/6)
-- Kopējais regresijas statuss: PASS
+## Kopsavilkums
 
-### Bug kartītes
-- Nav atrastu bug kartīšu regresijas ciklos.
-- Ja vēlāk tiek atklātas problēmas mobilajā skatā vai pārlūku atšķirībās, izveidot: `BUG-REG-001 — Mobilajā skatā vai Firefox redzamā atšķirība regresijas ciklā`.
+- Testa gadījumi kopā: 47
+- Regresijas cikli: 6
+- Kopējais QA statuss: PASS
+- Aizvērtas bug kartītes: 5
+- Atvērtas bug kartītes: 5
+- Galvenās jomas: autentifikācija, filtri, rezervācijas loģika, admin piekļuve, UI skaidrība un responsīvā izkārtojuma stabilitāte
