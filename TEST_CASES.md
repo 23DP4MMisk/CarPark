@@ -58,7 +58,25 @@
 
 ---
 
+## 3) Automašīnu rezervācijas testi
+
+| TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
+|---|---|---|---|---|---|---|
+| TC-201 | Veiksmīga rezervācija | Lietotājs ir autorizēts; automašīna ir aktīva; nav konflikta | 1. Atvērt konkrētās automašīnas rezervācijas formu 2. Iestatīt sākumu `now + 13h` 3. Iestatīt beigas `now + 2d` 4. Nospiest “Rezervēt” | Rezervācija tiek izveidota, tiek parādīts success ziņojums un lietotājs tiek novirzīts uz “Manas rezervācijas” | `save()` validē datus, pārbauda 12h minimumu, pārbauda konfliktus, aprēķina cenu un izveido `CarReservation` ierakstu | PASS |
+| TC-202 | Rezervācijas konflikts | Tā pati automašīna jau ir rezervēta noteiktā intervālā | 1. Izveidot esošu rezervāciju 2. Mēģināt rezervēt to pašu automašīnu pārklājošā laika periodā | Sistēma nepieļauj dublikātu un parāda kļūdu | `hasConflict()` pārbauda pārklāšanos `start_time < end && end_time > start` un pie konfliktā pievieno kļūdu `start_time` | PASS |
+| TC-203 | Sākums pagātnē | Lietotājs ir autorizēts | 1. Iestatīt `start_time = now() - 1h` 2. `end_time = now() + 1d` 3. Mēģināt rezervēt | Rezervācija tiek noraidīta kā nederīga | `required|date|after:now` aizliedz sākumu pagātnē | PASS |
+| TC-204 | Beigas pirms sākuma | Lietotājs ir autorizēts | 1. Iestatīt `start_time = now() + 2d` 2. `end_time = now() + 1d` 3. Mēģināt rezervēt | Rezervācija tiek noraidīta, jo beigu laiks ir pirms sākuma | `end_time` validācija `after:start_time` neļauj nepatiess datums | PASS |
+| TC-205 | Cenas aprēķins (1, 3, 7, 1.5 dienas) | Lietotājs ir autorizēts; automašīna ir ar noteiktu `price_per_day` | 1. Aprēķināt cenu ar 1 dienu 2. 3 dienām 3. 7 dienām 4. 1.5 dienām | Cena atbilst noteiktajam cenu modelim; 1.5 dienas tiek noapaļotas uz augšu līdz pilnai dienai | `calculateDays()` izmanto `ceil(diffInMinutes / 1440)`, tāpēc 1.5 dienas kļūst par 2 dienām | PASS |
+| TC-206 | Neautorizēta piekļuve | Lietotājs nav pieslēdzies | 1. Tieši atvērt `/cars/{car}/book` 2. Mēģināt rezervēt bez login | Lietotājs tiek novirzīts uz login lapu vai saņem 403 | Route izmanto `->middleware('auth')`, tāpēc piekļuve ir aizsargāta | PASS |
+
+### Bug kartītes
+- Nav bug kartīšu — visi 6 meklētie rezervācijas testi ir `PASS`.
+- Ja reizēm nepieciešams precizēt bizness noteikumu: `1.5` dienas tiek rēķinātas kā `2` dienas, jo tiek izmantots `ceil`, nevis `floor`.
+
+---
+
 ## Kopsavilkums
 - Sākotnējie 5 auth testa gadījumi: PASS
 - Jaunie 8 automašīnu filtru testa gadījumi: PASS
+- 6 automašīnu rezervācijas testi: PASS
 - Bug kartītes: 2 no auth/piekļuves un 2 no auto-filtru sadaļas
