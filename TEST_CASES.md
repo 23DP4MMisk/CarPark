@@ -75,8 +75,37 @@
 
 ---
 
+## 4) 12 stundu noteikuma testi
+
+| TC ID | Scenārijs | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Kļūdas ziņojums | Statuss |
+|---|---|---|---|---|---|---|---|
+| TC-301 | 6 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 6h` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek noraidīta, jo ir mazāk par 12 stundām | Kļūda tiek iestatīta un rezervācija netiek izveidota | `Rezervācija iespējama vismaz 12 stundas iepriekš.` | PASS |
+| TC-302 | 11:59 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 11h 59m` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek noraidīta | Kļūda tiek iestatīta un rezervācija netiek izveidota | `Rezervācija iespējama vismaz 12 stundas iepriekš.` | PASS |
+| TC-303 | Precīzi 12:00 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 12h` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta, jo noteikums ir “vismaz 12 stundas” | Rezervācija tiek izveidota bez kļūdām | — | PASS |
+| TC-304 | 13 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 13h` 2. `end_time = now() + 2d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta | Rezervācija tiek izveidota bez kļūdām | — | PASS |
+| TC-305 | 24 stundas pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 24h` 2. `end_time = now() + 3d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta | Rezervācija tiek izveidota bez kļūdām | — | PASS |
+| TC-306 | 1 nedēļa pirms rezervācijas | Lietotājs ir autorizēts; automašīna ir aktīva | 1. Iestatīt `start_time = now() + 7d` 2. `end_time = now() + 9d` 3. Nospiest “Rezervēt” | Rezervācija tiek pieņemta | Rezervācija tiek izveidota bez kļūdām | — | PASS |
+
+### Kļūdas ziņojuma precizitāte
+- Precīzs teksts, ko sistēma atgriež, ja rezervācijas sākums ir agrāks par 12 stundām: `Rezervācija iespējama vismaz 12 stundas iepriekš.`
+- Tas atbilst kodam `CarBookingForm::save()` priekš `if ($start->lt(now()->addHours(self::MIN_HOURS_AHEAD)))` un `addError('start_time', 'Rezervācija iespējama vismaz 12 stundas iepriekš.')`.
+
+---
+
 ## Kopsavilkums
-- Sākotnējie 5 auth testa gadījumi: PASS
-- Jaunie 8 automašīnu filtru testa gadījumi: PASS
-- 6 automašīnu rezervācijas testi: PASS
-- Bug kartītes: 2 no auth/piekļuves un 2 no auto-filtru sadaļas
+
+- Reģistrācija / login / logout / paroles atjaunošana / piekļuves kontrole: 5/5 PASS
+- Filtri un meklēšana: 8/8 PASS
+- Auto rezervācijas testi: 6/6 PASS
+- 12 stundu noteikuma testi: 6/6 PASS
+- Kopējais QA rezultāts: 25/25 PASS
+- Konstatētās bug kartītes:
+  - BUG-Auth-001 — E-pasta verifikācija nav aktivēta
+  - BUG-PARK-001 — Stāvvietu adreses/nav validētas
+  - BUG-CARLIST-001 — Tukšam rezultātam trūkst lietotājam draudzīgas ziņas
+  - BUG-CARLIST-002 — Filtru un URL sinhronizācija jāvalidē ar reālām kombinācijām
+
+### Galvenie secinājumi
+- Rezervācijas biznesa loģika darbojas saskaņā ar noteiktajiem minimālajiem intervāliem.
+- 12 stundu noteikums ir īstenots korekti un kļūdas ziņojums ir precīzs.
+- Bug kartītes ir saistītas galvenokārt ar validāciju, datu kvalitāti un lietotāja virsmas skaidrību, nevis ar kritiskām funkcionalitātēm.
