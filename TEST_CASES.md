@@ -92,13 +92,33 @@
 
 ---
 
+## 5) Kartes testi
+
+| TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Chrome | Firefox | Statuss |
+|---|---|---|---|---|---|---|---|
+| TC-401 | Kartes ielāde | Lietotājs ir uz konkrētās lapas ar karti | 1. Atvērt lapu ar karti 2. Pārbaudīt, ka karte ielādējas | Kartei ir jāparādās bez baltas/ tukšas zonas un bez kļūdām | PASS | PASS | PASS |
+| TC-402 | Marķieru parādīšana | Kartē ir pieejami objekti / vietas | 1. Atvērt karti 2. Pārbaudīt marķierus uz ekrāna | Visi marķieri tiek parādīti pareizi un atbilst datiem | PASS | PASS | PASS |
+| TC-403 | Popup / informācijas logs | Uz marķiera ir uzklikšķināšana | 1. Klikšķināt uz marķiera 2. Pārbaudīt popup saturu | Popup atveras ar pareizu informāciju un aizveras atbilstoši | PASS | PASS | PASS |
+| TC-404 | Poga uz interaktīvās kartes elementu | Kartē ir pieejama darbība / poga | 1. Klikšķināt uz pogas 2. Pārbaudīt reakciju | Poga darbojas un izraisa paredzēto darbību | PASS | PASS | PASS |
+| TC-405 | Tuvināšana | Lietotājs darbojas ar karti | 1. Izmantot + / - vai scroll 2. Pārbaudīt mēroga izmaiņas | Karte tiek tuvināta / tālināta bez traucējumiem | PASS | PASS | PASS |
+| TC-406 | Pārvietošana (pan) | Karte ir ielādēta | 1. Vilkt / drag karti 2. Mainīt skatu | Kartes centrs pārvietojas bez kļūmēm un bez pārtraukumiem | PASS | PASS | PASS |
+| TC-407 | Mobile skats | Pārbaudīt mobilo ekrāna izkārtojumu | 1. Pārslēgt uz mobilo skatu / responsive mode 2. Pārbaudīt karti un elementus | Karte pielāgojas mobilajam ekrānam, elementi nav pārklāti | PASS | PASS | PASS |
+| TC-408 | Pārlūku saderība | Testēšana Chrome un Firefox | 1. Atvērt karti Chrome 2. Atvērt karti Firefox 3. Salīdzināt funkcionalitāti | Kartes funkcionalitāte darbojas abos pārlūkos, bez būtiskām atšķirībām | PASS | PASS | PASS |
+
+### Bug kartītes
+- Nav atrasts bug kartītes — visi 8 kartes testi ir `PASS` gan Chrome, gan Firefox.
+- Ja kartes interaktivitāte vēlāk radīs pārlūku atšķirības, izveidot: `BUG-MAP-001 — Kartes funkcionalitāte ir nestabila Firefox vai Chrome konkrētās darbībās`.
+
+---
+
 ## Kopsavilkums
 
 - Reģistrācija / login / logout / paroles atjaunošana / piekļuves kontrole: 5/5 PASS
 - Filtri un meklēšana: 8/8 PASS
 - Auto rezervācijas testi: 6/6 PASS
 - 12 stundu noteikuma testi: 6/6 PASS
-- Kopējais QA rezultāts: 25/25 PASS
+- Kartes testi: 8/8 PASS
+- Kopējais QA rezultāts: 33/33 PASS
 - Konstatētās bug kartītes:
   - BUG-Auth-001 — E-pasta verifikācija nav aktivēta
   - BUG-PARK-001 — Stāvvietu adreses/nav validētas
