@@ -173,10 +173,69 @@
 - Konstatētās bug kartītes:
   - BUG-Auth-001 — E-pasta verifikācija nav aktivēta
   - BUG-PARK-001 — Stāvvietu adreses/nav validētas
-  - BUG-CARLIST-001 — Tukšam rezultātam trūkst lietotājam draudzīgas ziņas
+  - BUG-CARLIST-001 — Tukšam rezultātam trūkst lietotājam draudzīgas ziņojums
   - BUG-CARLIST-002 — Filtru un URL sinhronizācija jāvalidē ar reālām kombinācijām
 
 ### Galvenie secinājumi
 - Rezervācijas biznesa loģika darbojas saskaņā ar noteiktajiem minimālajiem intervāliem.
 - 12 stundu noteikums ir īstenots korekti un kļūdas ziņojums ir precīzs.
 - Bug kartītes ir saistītas galvenokārt ar validāciju, datu kvalitāti un lietotāja virsmas skaidrību, nevis ar kritiskām funkcionalitātēm.
+
+---
+
+## 9) Regresija — pilns lietotāja ceļš
+
+### Izietie cikli
+
+- Cikls REG-01 — Reģistrācija un pieteikšanās
+  - Darbības: reģistrācija, login, dashboard atvēršana, logout
+  - Chrome: PASS
+  - Firefox: PASS
+  - Mobile: PASS
+  - Statuss: PASS
+
+- Cikls REG-02 — Katalogs un meklēšana
+  - Darbības: katalogs, filtri pēc klases, degvielas, cenas, meklēšana, URL saglabāšana
+  - Chrome: PASS
+  - Firefox: PASS
+  - Mobile: PASS
+  - Statuss: PASS
+
+- Cikls REG-03 — Automašīnas rezervācija
+  - Darbības: auto izvēle, rezervācijas forma, datu ievadīšana, 12 stundu noteikums, cena, apstiprinājums
+  - Chrome: PASS
+  - Firefox: PASS
+  - Mobile: PASS
+  - Statuss: PASS
+
+- Cikls REG-04 — Stāvvietu rezervācija
+  - Darbības: stāvvietu saraksts, rezervācijas forma, datu ievadīšana, apstiprinājums
+  - Chrome: PASS
+  - Firefox: PASS
+  - Mobile: PASS
+  - Statuss: PASS
+
+- Cikls REG-05 — Manas rezervācijas
+  - Darbības: rezervāciju saraksta atvēršana, statusi, detalizācija, atcelšana/vēsture
+  - Chrome: PASS
+  - Firefox: PASS
+  - Mobile: PASS
+  - Statuss: PASS
+
+- Cikls REG-06 — Admin panelis
+  - Darbības: admin login, piekļuve booking/cars/parking lapām, CRUD darbības, autorizācija
+  - Chrome: PASS
+  - Firefox: PASS
+  - Mobile: PASS
+  - Statuss: PASS
+
+### Kopsavilkums
+- Izieti cikli: 6
+- Chrome: PASS (6/6)
+- Firefox: PASS (6/6)
+- Mobile: PASS (6/6)
+- Kopējais regresijas statuss: PASS
+
+### Bug kartītes
+- Nav atrastu bug kartīšu regresijas ciklos.
+- Ja vēlāk tiek atklātas problēmas mobilajā skatā vai pārlūku atšķirībās, izveidot: `BUG-REG-001 — Mobilajā skatā vai Firefox redzamā atšķirība regresijas ciklā`.
