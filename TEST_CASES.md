@@ -143,6 +143,22 @@
 
 ---
 
+## 8) Admin piekļuves testi
+
+| TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
+|---|---|---|---|---|---|---|
+| TC-701 | Neielogojies piekļuve | Lietotājs nav autentificēts | 1. Atvērt `/admin/bookings` 2. Atvērt `/admin/cars` 3. Atvērt `/admin/parking` | Sistēma novirza uz login vai atgriež autentifikācijas pieprasījumu | Routes izmanto `->middleware(['auth', 'admin'])` un `auth` aizsargā piekļuvi bez pieslēgšanās | PASS |
+| TC-702 | Parasta lietotāja piekļuve admin booking lapai | Lietotājs ir autentificēts, bet nav admins | 1. Pieteikties kā parasts lietotājs 2. Atvērt `/admin/bookings` | Lietotājs saņem 403 vai tiek noraidīts | `EnsureUserIsAdmin` izmanto `abort_unless($request->user()?->is_admin, 403)` | PASS |
+| TC-703 | Parasta lietotāja piekļuve admin car lapai | Lietotājs ir autentificēts, bet nav admins | 1. Pieteikties kā parasts lietotājs 2. Atvērt `/admin/cars` | Lietotājs saņem 403 | `admin` middleware bloķē piekļuvi bez `is_admin` statusa | PASS |
+| TC-704 | Parasta lietotāja piekļuve admin parking lapai | Lietotājs ir autentificēts, bet nav admins | 1. Pieteikties kā parasts lietotājs 2. Atvērt `/admin/parking` | Lietotājs saņem 403 | Admin routes aizsargā piekļuvi ar `auth` + `admin` middleware | PASS |
+| TC-705 | Administratora piekļuve booking lapai | Lietotājs ir autorizēts un `is_admin = true` | 1. Pieteikties kā admins 2. Atvērt `/admin/bookings` | Admin var piekļūt un redzēt administrēšanas saturu | `is_admin` lietotājs izej cauri `admin` middleware un piekļūst lapai | PASS |
+| TC-706 | Administratora piekļuve visām admin lapām | Lietotājs ir admins | 1. Pieteikties kā admins 2. Atvērt `/admin/bookings` 3. Atvērt `/admin/cars` 4. Atvērt `/admin/parking` | Visi admin ceļi ir pieejami bez kļūdām | Gan bookings, gan cars, gan parking routes ir aizsargāti ar to pašu admin middleware un ir pieejami adminam | PASS |
+
+### Bug kartītes
+- Nav bug kartītes — visi 6 admin piekļuves testi ir `PASS`.
+
+---
+
 ## Kopsavilkums
 
 - Reģistrācija / login / logout / paroles atjaunošana / piekļuves kontrole: 5/5 PASS
@@ -152,7 +168,8 @@
 - Kartes testi: 8/8 PASS
 - Automašīnu CRUD testi: 7/7 PASS
 - Stāvvietu CRUD testi: 5/5 PASS
-- Kopējais QA rezultāts: 41/41 PASS
+- Admin piekļuves testi: 6/6 PASS
+- Kopējais QA rezultāts: 47/47 PASS
 - Konstatētās bug kartītes:
   - BUG-Auth-001 — E-pasta verifikācija nav aktivēta
   - BUG-PARK-001 — Stāvvietu adreses/nav validētas
