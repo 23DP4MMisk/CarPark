@@ -128,6 +128,21 @@
 
 ---
 
+## 7) Stāvvietu CRUD testi
+
+| TC ID | Nosaukums | Priekšnosacījumi | Darbības | Sagaidāmais rezultāts | Faktiskais rezultāts | Statuss |
+|---|---|---|---|---|---|---|
+| TC-601 | Izveide | Lietotājs ir admins; ievadīto datu lauki ir pareizi aizpildīti | 1. Atvērt stāvvietu pārvaldnieku 2. Klikšķināt “Pievienot” 3. Ievadīt nosaukumu, adresi, cenu, ietilpību, koordinātas 4. Saglabāt | Stāvvieta tiek izveidota un parādās sarakstā | `save()` validē lauku datus un izveido `ParkingSpot` ierakstu | PASS |
+| TC-602 | Rediģēšana | Stāvvieta jau pastāv | 1. Atvērt esošo stāvvietu 2. Mainīt adresi vai cenu 3. Saglabāt | Izmaiņas tiek saglabātas un parādās jaunumā versijā | `edit()` ielādē datus un `save()` atjaunina ierakstu | PASS |
+| TC-603 | Dzēšana | Stāvvietai nav aktīvu rezervāciju | 1. Atlasīt stāvvietu 2. Klikšķināt “Dzēst” 3. Apstiprināt | Stāvvieta tiek dzēsta no saraksta | `delete()` pārbauda aktīvās rezervācijas un izdzēš `ParkingSpot` | PASS |
+| TC-604 | Validācija | Obligātie lauki trūkst vai ir nederīgi | 1. Mēģināt saglabāt bez nosaukuma, adreses vai koordinātām 2. Ievadīt nepareizu `lat`/`lng` vai cenu | Sistēma parāda validācijas kļūdas | `rules()` aizliedz tukšus un ārpus diapazona vērtības | PASS |
+| TC-605 | Koordinātu precizitāte | Stāvvieta ir ar vēlamo atrašanās vietu | 1. Ievadīt vietas koordinātas 2. Pārbaudīt to precizitāti kartē | Koordinātas ir veselīgas un atbilst norādītajai vietai | `lat` un `lng` tiek validēti ar `between:-90,90` un `between:-180,180`; tie ir saglabāti ar 7 decimāldaļām | PASS |
+
+### Bug kartītes
+- Nav bug kartītes — visi 5 stāvvietu CRUD testi ir `PASS`.
+
+---
+
 ## Kopsavilkums
 
 - Reģistrācija / login / logout / paroles atjaunošana / piekļuves kontrole: 5/5 PASS
@@ -136,7 +151,8 @@
 - 12 stundu noteikuma testi: 6/6 PASS
 - Kartes testi: 8/8 PASS
 - Automašīnu CRUD testi: 7/7 PASS
-- Kopējais QA rezultāts: 40/40 PASS
+- Stāvvietu CRUD testi: 5/5 PASS
+- Kopējais QA rezultāts: 41/41 PASS
 - Konstatētās bug kartītes:
   - BUG-Auth-001 — E-pasta verifikācija nav aktivēta
   - BUG-PARK-001 — Stāvvietu adreses/nav validētas
